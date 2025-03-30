@@ -8,7 +8,3 @@ const app = new App({
 })
 
 export default app
-
-
-import './pdf-lib.min.js'
-import './fontkit.umd.min.js'
