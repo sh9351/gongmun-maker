@@ -31,19 +31,225 @@
     "",
     "",
     "",
+    "",
   ]);
   const fontIndex = writable("1");
+  fontIndex.subscribe(() => {
+    create($values);
+  });
 
   let timer;
   function setTimer() {
     clearTimeout(timer);
     timer = setTimeout(() => create($values), 1000);
   }
-  values.subscribe(() => {
+
+  let previousPreset = null;
+
+  const presetImages = [];
+  [
+    "sen.jpg",
+    "pen.jpg",
+    "dge.jpg",
+    "gen.jpg",
+    "dje.jpg",
+    "sje.jpg",
+    "clean.jpg",
+    "cne.jpg",
+    "jne.jpg",
+    "gbe.jpg",
+    "gne.jpg",
+    "police.png",
+    "spo1.jpg",
+    "spo2.jpg",
+    "doj1.jpg",
+    "doj2.jpg",
+    "mnd1.jpg",
+    "mnd2.jpg",
+    "moe.jpg",
+    "president.jpg",
+  ].map((image, i) =>
+    fetch(`/images/${image}`)
+      .then((res) => res.arrayBuffer())
+      .then(
+        (blob) =>
+          (presetImages[i] = [
+            new File([blob], image, {
+              type: image.endsWith(".png") ? "image/png" : "image/jpeg",
+            }),
+          ]),
+      ),
+  );
+
+  values.subscribe(async () => {
     setTimer();
-  });
-  fontIndex.subscribe((value) => {
-    $values[24] = value;
+    const preset = $values[24];
+    if (preset && previousPreset !== preset) {
+      previousPreset = preset;
+      switch (preset) {
+        case "sen": {
+          $values[14] = null;
+          $values[15] = presetImages[0];
+          $values[16] = "미래를 여는 협력교육";
+          $values[17] = "가치있는 청렴, 같이하는 청렴";
+          break;
+        }
+        case "pen": {
+          $values[14] = null;
+          $values[15] = presetImages[1];
+          $values[16] = "꿈을 현실로! 희망 부산교육";
+          $values[17] = "";
+          break;
+        }
+        case "dge": {
+          $values[14] = null;
+          $values[15] = presetImages[2];
+          $values[16] = '"미래를 배운다 함께 성장한다"';
+          $values[17] = "친절은 마음으로, 청렴은 행동으로";
+          break;
+        }
+        case "ice": {
+          $values[14] = null;
+          $values[15] = null;
+          $values[16] = "개인정보 보호, 당신의 손에서 시작됩니다!";
+          $values[17] = "변화된 미래 새희망 우리북부교육";
+          break;
+        }
+        case "gen": {
+          $values[14] = null;
+          $values[15] = presetImages[3];
+          $values[16] =
+            "마침표 없는 스승의 가르침, 쉼표 없는 존경의 마음, 느낌표 가득 행복한 학교";
+          $values[17] = "5·18민주화운동은 대한민국의 자랑스러운 역사입니다.";
+          break;
+        }
+        case "dje": {
+          $values[14] = null;
+          $values[15] = presetImages[4];
+          $values[16] = "두 손 모아 스승 감사! 두 팔 벌려 제자 사랑!";
+          $values[17] = "";
+          break;
+        }
+        case "sje": {
+          $values[14] = null;
+          $values[15] = presetImages[5];
+          $values[16] = '"모두가 특별해지는 세종교육"';
+          $values[17] = '"생각하는 사람 참여하는 시민"';
+          break;
+        }
+        case "goe": {
+          $values[14] = null;
+          $values[15] = presetImages[6];
+          $values[16] = "청렴은 교육의 기본가치입니다.";
+          $values[17] = "기억을 넘어 희망으로 경기교육이 함께하겠습니다.";
+          break;
+        }
+        case "gwe": {
+          $values[14] = null;
+          $values[15] = null;
+          $values[16] = "가르침은 사랑으로! 배움은 존경으로!";
+          $values[17] = "행복한 학교 함께하는 강원교육";
+          break;
+        }
+        case "cbe": {
+          $values[14] = null;
+          $values[15] = presetImages[6];
+          $values[16] = "실력다짐 충북교육";
+          $values[17] = "불편공문서 개선 요청 주소 (https://pain.cbe.go.kr)";
+          break;
+        }
+        case "cne": {
+          $values[14] = presetImages[7];
+          $values[15] = null;
+          $values[16] = "삶의 주체로 함께 성장하는 세계시민";
+          $values[17] = "사랑으로 이끄는 손, 존경으로 맞잡은 손";
+          break;
+        }
+        case "jne": {
+          $values[14] = null;
+          $values[15] = presetImages[8];
+          $values[16] = '"미래를 여는 글로컬교육, 전남이 시작합니다"';
+          $values[17] = "";
+          break;
+        }
+        case "gbe": {
+          $values[14] = null;
+          $values[15] = presetImages[9];
+          $values[16] = "";
+          $values[17] = "";
+          break;
+        }
+        case "gne": {
+          $values[14] = null;
+          $values[15] = presetImages[10];
+          $values[16] = "경남교육이 대한민국 미래교육입니다.";
+          $values[17] = "";
+          break;
+        }
+        case "jje": {
+          $values[14] = null;
+          $values[15] = presetImages[6];
+          $values[16] =
+            "너와 내가 함께하는 청렴문화, 우리 모두를 지키는 버팀목";
+          $values[17] = "“청렴은 제주교육의 자존심입니다.”";
+          break;
+        }
+        case "police": {
+          $values[0] = "경찰청";
+          $values[14] = presetImages[11];
+          $values[15] = null;
+          $values[16] = "책임을 다하는 국민의 경찰";
+          $values[17] = "책임을 다하는 국민의 경찰";
+          $values[19] = "http://www.police.go.kr";
+          break;
+        }
+        case "spo": {
+          $values[0] = "대검찰청";
+          $values[14] = presetImages[12];
+          $values[15] = presetImages[13];
+          $values[16] = "";
+          $values[17] = "";
+          $values[19] = "spo.go.kr";
+          break;
+        }
+        case "doj": {
+          $values[0] = "법무부";
+          $values[14] = presetImages[14];
+          $values[15] = presetImages[15];
+          $values[16] = "다시 대한민국! 새로운 국민의 나라";
+          $values[17] = "";
+          $values[19] = "http://www.moj.go.kr";
+          break;
+        }
+        case "mnd": {
+          $values[0] = "국방부";
+          $values[14] = presetImages[16];
+          $values[15] = presetImages[17];
+          $values[16] = "다시 대한민국! 새로운 국민의 나라";
+          $values[17] = "";
+          $values[19] = "http://www.mnd.go.kr";
+          break;
+        }
+        case "moe": {
+          $values[0] = "교육부";
+          $values[14] = presetImages[18];
+          $values[15] = null;
+          $values[16] = "";
+          $values[17] = "";
+          $values[19] = "www.moe.go.kr";
+          break;
+        }
+        case "president": {
+          $values[0] = "대 통 령 비 서 실";
+          $values[14] = presetImages[19];
+          $values[15] = null;
+          $values[16] = "다시 대한민국! 새로운 국민의 나라";
+          $values[17] = "";
+          $values[19] = "www.president.go.kr";
+          break;
+        }
+      }
+    }
   });
 
   let show = true;
@@ -64,8 +270,8 @@
     ].map((font, i) =>
       fetch(`/fonts/${font}`)
         .then((res) => res.arrayBuffer())
-        .then((blob) => (fonts[i] = blob))
-    )
+        .then((blob) => (fonts[i] = blob)),
+    ),
   ).then(() => create($values));
   async function getFont(pdfDoc) {
     if ($fontIndex === "1") {
@@ -166,7 +372,7 @@
         y: height - 220,
         size: 12,
         font,
-      }
+      },
     );
     page.drawLine({
       start: { x: 50, y: height - 225 },
@@ -183,7 +389,7 @@
         y: height - 250,
         size: 12,
         font,
-      }
+      },
     );
 
     // 공문 정보 회색줄
@@ -207,7 +413,7 @@
         ["이선민", "교사"],
         ["조우민", "교사"],
         ["한은지", "교감"],
-        ["신문용", "교장"]
+        ["신문용", "교장"],
       );
 
     approvers.forEach(([name, title], i) => {
@@ -225,7 +431,7 @@
             y: height - 655,
             size: 8,
             font,
-          }
+          },
         );
         page.drawText(name, {
           x: 110 + i * 120,
@@ -258,7 +464,7 @@
         y: height - 750,
         size: 10,
         font,
-      }
+      },
     );
     page.drawText(
       `우 ${values[18] || "10124 경기도 김포시 고촌읍 신곡로 106"}\t\t\t\t/\t${values[19]}`,
@@ -267,7 +473,7 @@
         y: height - 770,
         size: 10,
         font,
-      }
+      },
     );
     page.drawText(
       `전화 ${values[20] || "031-123-4567"}\t\t\t/전송 ${values[21] || "031-123-4567"}\t\t\t/ ${values[22]}\t\t\t/ 공개`,
@@ -276,7 +482,7 @@
         y: height - 790,
         size: 10,
         font,
-      }
+      },
     );
 
     // 하단 홍보문구
@@ -291,7 +497,7 @@
     const url = URL.createObjectURL(
       new Blob([buffer], {
         type: "application/pdf",
-      })
+      }),
     );
     $src = url;
   }
@@ -303,6 +509,8 @@
     a.click();
     a.remove();
   }
+
+  const randint = Math.floor(9999 * Math.random());
 </script>
 
 <main>
@@ -347,8 +555,7 @@
               id="input1"
               placeholder="고촌중학교"
               bind:value={$values[0]}
-              on:keyup={() =>
-                ($values[2] = `${$values[0]}-${Math.floor(9999 * Math.random())}`)}
+              on:keyup={() => ($values[2] = `${$values[0]}-${randint}`)}
             />
             <div class="form-text">공문을 보내는 기관을 입력하세요.</div>
           </div>
@@ -586,6 +793,37 @@
           }}
           on:outroend={() => (show = true)}
         >
+          <div class="pb-3">
+            <label for="input25" class="form-label">
+              프리셋
+              <span class="badge text-bg-primary">NEW</span>
+            </label>
+            <select class="form-select" bind:value={$values[24]}>
+              <option value="moe">교육부</option>
+              <option value="sen">서울특별시교육청</option>
+              <option value="pen">부산광역시교육청</option>
+              <option value="dge">대구광역시교육청</option>
+              <option value="ice">인천광역시교육청</option>
+              <option value="gen">광주광역시교육청</option>
+              <option value="dje">대전광역시교육청</option>
+              <option value="sje">세종특별자치시교육청</option>
+              <option value="goe">경기도교육청</option>
+              <option value="gwe">강원특별자치도교육청</option>
+              <option value="cbe">충청북도교육청</option>
+              <option value="cne">충청남도교육청</option>
+              <option value="jne">전라남도교육청</option>
+              <option value="gbe">경상북도교육청</option>
+              <option value="gne">경상남도교육청</option>
+              <option value="jje">제주특별자치도교육청</option>
+              <option value="police">경찰청</option>
+              <option value="spo">검찰청</option>
+              <option value="doj">법무부 (소년원)</option>
+              <option value="mnd">국방부</option>
+              <option value="president">대통령비서실</option>
+            </select>
+            <div class="form-text">각 기관별 프리셋을 선택하세요.</div>
+          </div>
+
           <div class="pb-3">
             <label for="input15" class="form-label">상단 좌측 로고</label>
             <input
