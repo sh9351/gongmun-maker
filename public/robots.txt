@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://vanguardbot.xyz/sitemap.xml
+#DaumWebMasterTool:413e22c7d792c1b6c086b6b47a13b192049f778e56d64f28e45c439af6a911ed:hpyh6QMC1hO5OwQY1FUTaQ==
