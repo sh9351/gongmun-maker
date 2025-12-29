@@ -643,12 +643,12 @@
       });
 
       // 상단 좌측 로고
-      if (values[14]?.length > 0) {
-        const file = values[14][0];
+      const file1 = values[14]?.[0];
+      if (file1?.arrayBuffer) {
         const image =
-          file.type === "image/png"
-            ? await pdfDoc.embedPng(await file.arrayBuffer())
-            : await pdfDoc.embedJpg(await file.arrayBuffer());
+          file1.type === "image/png"
+            ? await pdfDoc.embedPng(await file1.arrayBuffer())
+            : await pdfDoc.embedJpg(await file1.arrayBuffer());
         page.drawImage(image, {
           x: 50,
           y: height - 155,
@@ -657,12 +657,12 @@
         });
       }
       // 상단 우측 로고
-      if (values[15]?.length > 0) {
-        const file = values[15][0];
+      const file2 = values[15]?.[0];
+      if (file2?.arrayBuffer) {
         const image =
-          file.type === "image/png"
-            ? await pdfDoc.embedPng(await file.arrayBuffer())
-            : await pdfDoc.embedJpg(await file.arrayBuffer());
+          file2.type === "image/png"
+            ? await pdfDoc.embedPng(await file2.arrayBuffer())
+            : await pdfDoc.embedJpg(await file2.arrayBuffer());
         page.drawImage(image, {
           x: width - 50 - 55,
           y: height - 155,
