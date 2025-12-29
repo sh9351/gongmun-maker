@@ -19,7 +19,7 @@
     <button
       class="nav-link active"
       aria-current="page"
-      on:click={() => goto(href)}>{text}</button
+      on:click={() => goto(href)}><strong>{text}</strong></button
     >
   {:else}
     <button class="nav-link" on:click={() => goto(href)}>{text}</button>

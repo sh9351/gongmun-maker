@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://vanguardbot.xyz/sitemap.xml
-#DaumWebMasterTool:de11749ab50f1e2cdf34f184ff78cd81a4d4d2c149a997cd18ce662948c44a5d:hpyh6QMC1hO5OwQY1FUTaQ==
+Sitemap: https://gongmun-maker.pages.dev/sitemap.xml
