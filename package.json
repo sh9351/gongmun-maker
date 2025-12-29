@@ -17,13 +17,14 @@
     }
   },
   "devDependencies": {
+    "@mojojoejo/vite-plugin-purgecss": "^1.1.0",
     "@sveltejs/vite-plugin-svelte": "^3.1.1",
     "svelte": "^4.2.18",
-    "vite": "^5.4.1",
-    "@mojojoejo/vite-plugin-purgecss": "^1.1.0"
+    "vite": "^5.4.1"
   },
   "dependencies": {
     "@pdf-lib/fontkit": "^1.1.1",
+    "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^5.4.449"
   }
 }
