@@ -47,6 +47,7 @@
     // 이하 공통
     "3", // 35 fontIndex
     "1", // 36 typeIndex
+    false, // 37 결문 생략
   ]);
   let page = writable(1);
   const fonts = writable([]);
@@ -55,7 +56,7 @@
   let timer;
   function setTimer() {
     clearTimeout(timer);
-    timer = setTimeout(() => create($values), 1000);
+    timer = setTimeout(() => create($values), 1000 * 3);
   }
 
   let previousPreset = null;
@@ -602,7 +603,7 @@
 4. 학교 자체 사안 조사를 희망하지 않으며, 학교폭력제로센터에 조사관 배정을 요청합니다.
 
 5. 「학교폭력예방법」 제13조의2(학교의 장의 자체해결)에 의거한 학교장 자체해결제 및 학교폭력 사안
-관계회복 프로그램의 운영에 동의하지 않으며, 학교폭력대책심의위원회의 개최를 요구합니다.
+    관계회복 프로그램의 운영에 동의하지 않으며, 학교폭력대책심의위원회의 개최를 요구합니다.
 
 붙임  1. 학생 작성 확인서 1부.
         2. 가해자와 피해학생 분리 의사 확인서 1부.  끝.`,
@@ -715,140 +716,142 @@
         }
       );
 
-      // 회색줄
-      page.drawRectangle({
-        x: 50,
-        y: height - 640,
-        width: width - 100,
-        height: 8,
-        color: rgb(204 / 255, 204 / 255, 204 / 255),
-      });
+      if (!values[37]) {
+        // 회색줄
+        page.drawRectangle({
+          x: 50,
+          y: height - 640,
+          width: width - 100,
+          height: 8,
+          color: rgb(204 / 255, 204 / 255, 204 / 255),
+        });
 
-      // 결재자
-      const approvers = [];
-      for (let i = 0; i <= 3; i++) {
-        const name = values[6 + i * 2];
-        const title = values[7 + i * 2];
-        if (name && title) approvers.push([name, title]);
-      }
-      // 예시 정보
-      if (approvers.length < 1)
-        approvers.push(
-          ["이선민", "교사"],
-          ["조우민", "교사"],
-          ["한은지", "교감"],
-          ["신문용", "교장"]
-        );
+        // 결재자
+        const approvers = [];
+        for (let i = 0; i <= 3; i++) {
+          const name = values[6 + i * 2];
+          const title = values[7 + i * 2];
+          if (name && title) approvers.push([name, title]);
+        }
+        // 예시 정보
+        if (approvers.length < 1)
+          approvers.push(
+            ["이선민", "교사"],
+            ["조우민", "교사"],
+            ["한은지", "교감"],
+            ["신문용", "교장"]
+          );
 
-      approvers.forEach(([name, title], i) => {
-        page.drawText(title, {
-          x: 50 + i * 120,
-          y: height - 660,
+        approvers.forEach(([name, title], i) => {
+          page.drawText(title, {
+            x: 50 + i * 120,
+            y: height - 660,
+            size: 8,
+            font,
+          });
+          if (i === approvers.length - 1) {
+            page.drawText(
+              `${date.getFullYear()}. ${date.getMonth() + 1}. ${date.getDate()}.`,
+              {
+                x: 110 + i * 120,
+                y: height - 655,
+                size: 8,
+                font,
+              }
+            );
+            page.drawText(name, {
+              x: 110 + i * 120,
+              y: height - 665,
+              size: 10,
+              font: font2,
+            });
+          } else
+            page.drawText(name, {
+              x: 110 + i * 120,
+              y: height - 660,
+              size: 12,
+              font: font2,
+            });
+        });
+
+        // 협조자
+        page.drawText("협조자", {
+          x: 50,
+          y: height - 710,
           size: 8,
           font,
         });
-        if (i === approvers.length - 1) {
-          page.drawText(
-            `${date.getFullYear()}. ${date.getMonth() + 1}. ${date.getDate()}.`,
-            {
-              x: 110 + i * 120,
-              y: height - 655,
-              size: 8,
-              font,
-            }
-          );
-          page.drawText(name, {
-            x: 110 + i * 120,
-            y: height - 665,
-            size: 10,
-            font: font2,
-          });
-        } else
-          page.drawText(name, {
-            x: 110 + i * 120,
-            y: height - 660,
-            size: 12,
-            font: font2,
-          });
-      });
 
-      // 협조자
-      page.drawText("협조자", {
-        x: 50,
-        y: height - 710,
-        size: 8,
-        font,
-      });
-
-      // 시행 문서 번호
-      page.drawText(`시행 ${values[2] || "고촌중학교-5329"}`, {
-        x: 50,
-        y: height - 750,
-        size: 10,
-        font,
-      });
-      // 접수 문서 번호
-      page.drawText(`(\t\t\t\t\t\t)\t\t접수\t\t\t\t\t\t\t\t(\t\t\t\t\t\t)`, {
-        x: 200,
-        y: page.getHeight() - 750,
-        size: 10,
-        font,
-      });
-      // 발신 기관 주소
-      if (values[18])
-        page.drawText(`우 ${values[18]}\t\t\t\t`, {
+        // 시행 문서 번호
+        page.drawText(`시행 ${values[2] || "고촌중학교-5329"}`, {
           x: 50,
+          y: height - 750,
+          size: 10,
+          font,
+        });
+        // 접수 문서 번호
+        page.drawText(`(\t\t\t\t\t\t)\t\t접수\t\t\t\t\t\t\t\t(\t\t\t\t\t\t)`, {
+          x: 200,
+          y: page.getHeight() - 750,
+          size: 10,
+          font,
+        });
+        // 발신 기관 주소
+        if (values[18])
+          page.drawText(`우 ${values[18]}\t\t\t\t`, {
+            x: 50,
+            y: page.getHeight() - 770,
+            size: 10,
+            font,
+          });
+        // 발신 기관 홈페이지 주소
+        page.drawText(`/\t${values[19]}`, {
+          x: 350,
           y: page.getHeight() - 770,
           size: 10,
           font,
         });
-      // 발신 기관 홈페이지 주소
-      page.drawText(`/\t${values[19]}`, {
-        x: 350,
-        y: page.getHeight() - 770,
-        size: 10,
-        font,
-      });
-      // 발신인 전화번호
-      page.drawText(`전화 ${values[20]}`, {
-        x: 50,
-        y: page.getHeight() - 790,
-        size: 10,
-        font,
-      });
-      // 발신인 팩스번호
-      page.drawText(`/전송 ${values[21]}`, {
-        x: 180,
-        y: page.getHeight() - 790,
-        size: 10,
-        font,
-      });
-      // 발신인 이메일 주소
-      page.drawText(`/${values[22]}`, {
-        x: 310,
-        y: page.getHeight() - 790,
-        size: 10,
-        font,
-      });
-      // 공개 구분
-      page.drawText(
-        `/${values[25] || (values[5].includes("\n붙임 ") ? "부분공개(6)" : "공개")}`,
-        {
-          x: 440,
+        // 발신인 전화번호
+        page.drawText(`전화 ${values[20]}`, {
+          x: 50,
           y: page.getHeight() - 790,
           size: 10,
           font,
-        }
-      );
-
-      // 하단 홍보문구
-      if (values[17])
-        page.drawText(values[17], {
-          x: (width - font.widthOfTextAtSize(values[17], 10)) / 2,
-          y: height - 810,
+        });
+        // 발신인 팩스번호
+        page.drawText(`/전송 ${values[21]}`, {
+          x: 180,
+          y: page.getHeight() - 790,
           size: 10,
           font,
         });
+        // 발신인 이메일 주소
+        page.drawText(`/${values[22]}`, {
+          x: 310,
+          y: page.getHeight() - 790,
+          size: 10,
+          font,
+        });
+        // 공개 구분
+        page.drawText(
+          `/${values[25] || (values[5].includes("\n붙임 ") ? "부분공개(6)" : "공개")}`,
+          {
+            x: 440,
+            y: page.getHeight() - 790,
+            size: 10,
+            font,
+          }
+        );
+
+        // 하단 홍보문구
+        if (values[17])
+          page.drawText(values[17], {
+            x: (width - font.widthOfTextAtSize(values[17], 10)) / 2,
+            y: height - 810,
+            size: 10,
+            font,
+          });
+      }
     }
 
     const buffer = await pdfDoc.save();
@@ -860,9 +863,11 @@
     $src = url;
 
     if (canvas) {
+      let scale = window.devicePixelRatio;
+      if (scale <= 1.5) scale = 1.5;
       const pdf = await pdfjsLib.getDocument(url).promise;
       const page = await pdf.getPage(1);
-      const viewport = page.getViewport({ scale: 1.5 });
+      const viewport = page.getViewport({ scale });
       const ctx = canvas.getContext("2d");
       canvas.width = viewport.width;
       canvas.height = viewport.height;
@@ -873,7 +878,7 @@
     await saveValues(values);
   }
 
-  function saveFile() {
+  function savePDF() {
     const a = document.createElement("a");
     a.href = $src;
     a.download = "결재문서본문.pdf";
@@ -881,16 +886,37 @@
     a.remove();
   }
 
+  function saveImage() {
+    if (!canvas) return;
+    const a = document.createElement("a");
+    a.href = canvas.toDataURL("image/png");
+    a.download = "결재문서본문.png";
+    a.click();
+    a.remove();
+  }
+
   async function saveValues(values) {
-    [14, 15].forEach((i) => {
-      if (!values[i]?.[0]) return;
-      const reader = new FileReader();
-      reader.addEventListener("load", () => {
-        values[i][0] = reader.result;
-      });
-      reader.readAsDataURL(values[i][0]);
-    });
-    window.localStorage.setItem("gongmun-maker-values", JSON.stringify(values));
+    const valuesTemp = [];
+    for (const [i, value] of values.entries()) {
+      if (i === 14 || i === 15) {
+        if (!value?.[0]) {
+          valuesTemp[i] = null;
+          continue;
+        }
+        const reader = new FileReader();
+        const result = await new Promise((resolve) => {
+          reader.addEventListener("load", () => {
+            resolve(reader.result);
+          });
+          reader.readAsDataURL(value[0]);
+        });
+        valuesTemp[i] = result;
+      } else if (i !== 24) valuesTemp[i] = value;
+    }
+    window.localStorage.setItem(
+      "gongmun-maker-values",
+      JSON.stringify(valuesTemp)
+    );
   }
 
   async function loadValues() {
@@ -910,7 +936,7 @@
           valuesTemp[i] = [
             new File([blob], `image.${type.split("/")[1]}`, { type }),
           ];
-        } else valuesTemp[i] = v;
+        } else if (i !== 24) valuesTemp[i] = v;
       }
       values.update((v) => {
         for (const [i, newValue] of valuesTemp.entries()) {
@@ -1156,7 +1182,7 @@
 4. 학교 자체 사안 조사를 희망하지 않으며, 학교폭력제로센터에 조사관 배정을 요청합니다.
 
 5. 「학교폭력예방법」 제13조의2(학교의 장의 자체해결)에 의거한 학교장 자체해결제 및 학교폭력 사안
-관계회복 프로그램의 운영에 동의하지 않으며, 학교폭력대책심의위원회의 개최를 요구합니다.
+    관계회복 프로그램의 운영에 동의하지 않으며, 학교폭력대책심의위원회의 개최를 요구합니다.
 
 붙임  1. 학생 작성 확인서 1부.
         2. 가해자와 피해학생 분리 의사 확인서 1부.  끝."
@@ -1182,7 +1208,7 @@
               본문 내용을 입력하세요. 자동 줄바꿈이 되지 않아요.
             </div>
           </div>
-          <button class="btn btn-primary" on:click={() => goto(1)}>
+          <button class="btn btn-outline-primary" on:click={() => goto(1)}>
             &LeftArrow; 이전
           </button>
           <button class="btn btn-primary" on:click={() => goto(3)}>
@@ -1393,7 +1419,7 @@
               </div>
             </div>
           {/if}
-          <button class="btn btn-primary" on:click={() => goto(2)}>
+          <button class="btn btn-outline-primary" on:click={() => goto(2)}>
             &LeftArrow; 이전
           </button>
           <button class="btn btn-primary" on:click={() => goto(4)}>
@@ -1680,16 +1706,36 @@
             <div class="form-text">폰트를 선택하세요.</div>
           </form>
 
-          <button class="btn btn-primary" on:click={() => goto(3)}>
+          <div class="pb-3">
+            <label for="input42" class="form-label">결문 생략</label>
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="input42"
+              bind:checked={$values[37]}
+            />
+            <div class="form-text">
+              결문을 생략할 수 있어요. 특수한 경우에만 사용하세요.
+            </div>
+          </div>
+
+          <button class="btn btn-outline-primary" on:click={() => goto(3)}>
             &LeftArrow; 이전
           </button>
-          <button class="btn btn-primary" on:click={() => saveFile()}>
-            저장 &DownArrow;
+          <button class="btn btn-primary" on:click={() => savePDF()}>
+            저장 (PDF) &DownArrow;
+          </button>
+          <button class="btn btn-outline-primary" on:click={() => saveImage()}>
+            저장 (PNG) &DownArrow;
           </button>
         </div>
       {/if}
-      <div class="col-md-6">
-        <canvas class="w-100" bind:this={canvas}></canvas>
+      <div class="col-md-6 pt-2 pt-md-0">
+        <canvas
+          class="w-100 shadow rounded"
+          bind:this={canvas}
+          style="aspect-ratio: 1 / 1.414;"
+        ></canvas>
       </div>
     </div>
     <footer class="d-lg-flex py-3 my-4 border-top">
